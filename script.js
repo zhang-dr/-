@@ -266,6 +266,7 @@ async function renderFootprints() {
     .data(cities)
     .join("circle")
     .attr("class", "city-marker")
+    .style("fill", "var(--ink)")
     .attr("data-base-radius", width < 720 ? 2.4 : 3.2)
     .attr("cx", (entry, index) => {
       const [x] = getCityPoint(entry.city, entry.place, entry.cityIndex, projection);
@@ -308,6 +309,7 @@ async function renderFootprints() {
         .attr("r", function () {
           return scaledMarkerRadius(Number(this.dataset.baseRadius), event.transform.k);
         })
+        .style("fill", "var(--ink)")
         .attr("stroke-width", 1.2 / Math.pow(event.transform.k, 1.2));
     })
     .on("end", () => {
