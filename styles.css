@@ -968,6 +968,80 @@ button {
   line-height: 1.12;
 }
 
+.report-collapse {
+  max-width: 920px;
+  margin: 24px 0;
+  border: 1px solid var(--ink);
+  background: color-mix(in srgb, var(--paper-strong) 90%, white);
+  box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.08);
+}
+
+.report-collapse summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 18px 22px;
+  cursor: pointer;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: clamp(1.28rem, 2vw, 1.9rem);
+  font-weight: 540;
+  line-height: 1.08;
+  list-style: none;
+}
+
+.report-collapse summary::-webkit-details-marker {
+  display: none;
+}
+
+.report-collapse summary::after {
+  content: "+";
+  display: grid;
+  flex: 0 0 34px;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border: 1px solid var(--ink);
+  border-radius: 50%;
+  color: var(--accent-dark);
+  font-family: var(--font-sans);
+  font-size: 1.2rem;
+  font-weight: 820;
+}
+
+.report-collapse[open] summary {
+  border-bottom: 1px solid var(--line);
+}
+
+.report-collapse[open] summary::after {
+  content: "-";
+}
+
+.report-collapse summary small {
+  margin-left: auto;
+  color: var(--accent-dark);
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  font-weight: 820;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.report-collapse > :not(summary) {
+  margin-left: 22px;
+  margin-right: 22px;
+}
+
+.report-collapse > :last-child {
+  margin-bottom: 22px;
+}
+
+.references-collapse p {
+  font-size: 0.94rem;
+  line-height: 1.55;
+}
+
 .report-title-line {
   color: var(--ink);
   font-family: var(--font-display);
