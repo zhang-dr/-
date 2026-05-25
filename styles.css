@@ -1147,6 +1147,17 @@ button {
   object-position: center 45%;
 }
 
+.detail-hero-image-contain {
+  background: var(--paper);
+}
+
+.detail-hero-image-contain img {
+  aspect-ratio: auto;
+  max-height: 620px;
+  object-fit: contain;
+  background: #fff;
+}
+
 .metric-grid .panel {
   display: grid;
   gap: 6px;
