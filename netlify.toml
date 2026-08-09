@@ -2,12 +2,6 @@
   publish = "."
 
 [[redirects]]
-  from = "/Volume"
-  to = "/Volume/"
-  status = 301
-  force = true
-
-[[redirects]]
   from = "/Volume/*"
   to = "https://uk-delivery-volume-dashboard.xihao-zhang.chatgpt.site/:splat"
   status = 200
