@@ -6,3 +6,22 @@
   to = "https://uk-delivery-volume-dashboard.xihao-zhang.chatgpt.site/:splat"
   status = 200
   force = true
+
+[[redirects]]
+  from = "/Pickup"
+  to = "https://uk-delivery-volume-dashboard.xihao-zhang.chatgpt.site/"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/Pickup/*"
+  to = "https://uk-delivery-volume-dashboard.xihao-zhang.chatgpt.site/:splat"
+  status = 200
+  force = true[build]
+  publish = "."
+
+[[redirects]]
+  from = "/Volume/*"
+  to = "https://uk-delivery-volume-dashboard.xihao-zhang.chatgpt.site/:splat"
+  status = 200
+  force = true
