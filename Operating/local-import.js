@@ -314,8 +314,11 @@ function completePostcodeCoverage(outlets, fullRows) {
   }
   return rows.sort((a, b) => b.total - a.total);
 }
+function isMappedPostcodeRow(row) {
+  return Boolean(clean(row?.code)) && row?.region !== "Unmapped" && clean(row?.outlet) !== "未映射";
+}
 function packVolumeForUpload(volume) {
-  const fullPostcodesPacked = (volume.views?.["Full Postcode"] || []).map((row) => [
+  const fullPostcodesPacked = (volume.views?.["Full Postcode"] || []).filter(isMappedPostcodeRow).map((row) => [
     row.region, row.code, row.outlet, row.postal, Number(row.due || 0), Number(row.backlog || 0), row.detailMissing ? 1 : 0,
   ]);
   return { ...volume, views: { ...(volume.views || {}), "Full Postcode": [] }, fullPostcodesPacked };
@@ -406,7 +409,7 @@ function parseWorkbook(arrayBuffer, routeMap, selectedDate = "") {
       rows += 1;
     }
   }
-  const routeMapMissingExamples = [...routeMapMissingKeys.entries()].sort((a, b) => b[1] - a[1]).slice(0, 12).map(([key, count]) => ({ key, count }));
+  const routeMapMissingExamples = [...routeMapMissingKeys.entries()].sort((a, b) => b[1] - a[1]).map(([key, count]) => ({ key, count }));
   return { byDate, quality: { rows, duplicates, skippedSheets, detailSheets, missingPickupDates, missingPostcodes, routeMapMissing, routeMapDuplicates: 0, routeMapMatched, routeMapMissingExamples, routeMapUpdated: map.updatedAt } };
 }
 
@@ -436,7 +439,7 @@ function parsedStreamedWorkbook(streamed, routeMap, selectedDate) {
     }
     parsedRows.push({ ...resolved, ...postcodes });
   }
-  const routeMapMissingExamples = [...routeMapMissingKeys.entries()].sort((a, b) => b[1] - a[1]).slice(0, 12).map(([key, count]) => ({ key, count }));
+  const routeMapMissingExamples = [...routeMapMissingKeys.entries()].sort((a, b) => b[1] - a[1]).map(([key, count]) => ({ key, count }));
   return {
     byDate: parsedRows.length ? new Map([[selectedDate, parsedRows]]) : new Map(),
     platformsAvailable: true,

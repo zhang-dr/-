@@ -142,6 +142,6 @@ const I18N={zh:{title:"提货单量预测",subtitle:"中心端 / 网点端每日
     $("saveSettings").onclick=async()=>{state.settings.cubeFactor=Number($("cubeFactor").value)||state.settings.cubeFactor;const res=await api("/settings",{method:"PUT",headers:{"content-type":"application/json"},body:JSON.stringify(state.settings)});setNotice(res.ok?t("settingsSaved"):t("settingsFailed"))};
     applyLang();init().then(applyLang).catch(()=>setNotice(t("loadFail")));
   </script>
-  <script type="module" src="/Operating/local-import.js?v=20260927-auto-date-unmapped"></script>
+  <script type="module" src="/Operating/local-import.js?v=20260927-unmapped-no-502"></script>
 </body>
 </html>
