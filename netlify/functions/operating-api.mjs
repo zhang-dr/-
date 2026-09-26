@@ -842,7 +842,12 @@ function buildComparison(rawItem, pickup, currentSettings = null) {
     forecastPlatformsAvailable: item.platformsAvailable,
     actualPlatformsAvailable: pickupPlatformsAvailable,
     platformsAvailable: item.platformsAvailable && pickupPlatformsAvailable,
-    comparisonQuality: { forecastRouteMapMissing: item.quality?.routeMapMissing || 0, actualRouteMapMissing: pickup?.quality?.routeMapMissing || 0 },
+    comparisonQuality: {
+      forecastRouteMapMissing: item.quality?.routeMapMissing || 0,
+      actualRouteMapMissing: pickup?.quality?.routeMapMissing || 0,
+      forecastRouteMapMissingExamples: item.quality?.routeMapMissingExamples || [],
+      actualRouteMapMissingExamples: pickup?.quality?.routeMapMissingExamples || [],
+    },
     platformComparison: sourcePlatformComparison(item.totals.sourcePlatforms || legacySourcePlatforms(item.totals.platforms), pickupPlatformsAvailable ? pickup.totals.sourcePlatforms || legacySourcePlatforms(pickup.totals.platforms) : null),
     comparisonOutlets,
     outlets,

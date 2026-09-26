@@ -197,6 +197,23 @@ test("current date vehicle override is applied to stored datasets", () => {
   assert.equal(result.centers[0].vehicle, "2 x 18T");
 });
 
+test("comparison exposes forecast and actual unmapped details", () => {
+  const result = buildComparison({
+    schemaVersion: 2,
+    date: "2026-09-27",
+    quality: { routeMapMissing: 2, routeMapMissingExamples: [{ key: "E16 + 13-099", count: 2 }] },
+    centers: [],
+    outlets: [],
+    totals: { platforms: {}, sourcePlatforms: {} },
+  }, {
+    quality: { routeMapMissing: 6, routeMapMissingExamples: [{ key: "DA1 + 13-012", count: 6 }] },
+    totals: { due: 6, platforms: {}, sourcePlatforms: {} },
+    outlets: [],
+  });
+  assert.deepEqual(result.comparisonQuality.forecastRouteMapMissingExamples, [{ key: "E16 + 13-099", count: 2 }]);
+  assert.deepEqual(result.comparisonQuality.actualRouteMapMissingExamples, [{ key: "DA1 + 13-012", count: 6 }]);
+});
+
 test("Operating separates outbound and same-centre without changing operation volume", () => {
   const rows = [
     mappedRow({ sourceType: "SF" }),

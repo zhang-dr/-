@@ -573,7 +573,7 @@ async function localForecastImport() {
     setNotice(translate("请先选择文件。", "Choose a file first."));
     return null;
   }
-  const selectedDate = clean($("forecastDate")?.value);
+  let selectedDate = clean($("forecastDate")?.value);
   if (!/^\d{4}-\d{2}-\d{2}$/.test(selectedDate)) {
     setNotice(translate("请先选择预测数据的操作日期。", "Choose the forecast operation date first."));
     return null;
@@ -586,9 +586,33 @@ async function localForecastImport() {
     setNotice(translate("正在本地解析 Excel，请不要关闭页面。", "Parsing Excel locally. Please keep this page open."));
     const routeMapResult = await fetchJson("/Operating/api/route-map/export", { routeMap: null });
     const arrayBuffer = await file.arrayBuffer();
-    const parsed = file.size >= 20 * 1024 * 1024
+    let parsed = file.size >= 20 * 1024 * 1024
       ? parsedStreamedWorkbook(await parseXlsxOrderDetails(arrayBuffer, selectedDate), routeMapResult.routeMap, selectedDate)
       : parseWorkbook(arrayBuffer, routeMapResult.routeMap, selectedDate);
+    // The page initially inherits the latest displayed dataset date. When a
+    // single-date workbook is uploaded for a newer day, use the workbook's
+    // operation date instead of incorrectly reporting that no detail sheet exists.
+    if (!parsed.byDate.size && parsed.quality?.detailSheets?.length && file.size < 20 * 1024 * 1024) {
+      const detected = parseWorkbook(arrayBuffer, routeMapResult.routeMap);
+      const detectedDates = [...detected.byDate.keys()].sort();
+      if (detectedDates.length === 1) {
+        selectedDate = detectedDates[0];
+        parsed = detected;
+        $("forecastDate").value = selectedDate;
+        $("forecastTargetDate").textContent = addDays(selectedDate, 1);
+      } else if (detectedDates.length > 1) {
+        throw new Error(translate(
+          `文件包含多个操作日期（${detectedDates.join("、")}），请选择其中一个日期后重新导入。`,
+          `The file contains multiple operation dates (${detectedDates.join(", ")}). Select one of them and import again.`
+        ));
+      }
+    }
+    if (!parsed.byDate.size && parsed.quality?.detailSheets?.length) {
+      throw new Error(translate(
+        `明细表中没有 ${selectedDate} 的有效订单，请检查操作日期。`,
+        `No valid orders dated ${selectedDate} were found in the detail sheets. Check the operation date.`
+      ));
+    }
     if (!parsed.byDate.size) throw new Error(translate("没有识别到可导入的订单明细表。", "No importable order detail sheets were detected."));
     const settingsResult = await fetchJson("/Operating/api/settings", { settings: DEFAULT_SETTINGS });
     const settings = { ...DEFAULT_SETTINGS, ...(settingsResult.settings || {}) };
